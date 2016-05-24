@@ -18,13 +18,19 @@ from django.contrib import admin
 
 from orders import views as orders_views
 from orders import urls as orders_url
+import settings as settings
+from customers import views as customers_views
+from customers import urls as customers_url
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),  # admin site
-
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
     # front app
     url(r'^$', orders_views.index, name="home"),
 
     # linked url in module orders from main urls.py to app url
     url(r'^order/', include(orders_url, namespace="order")),
+    url(r'^customer/', include(customers_url, namespace="customer")),
 ]

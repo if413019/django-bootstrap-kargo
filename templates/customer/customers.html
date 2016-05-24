@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block header %} {% endblock header %}
+{% block smalltitle %} Customers {% endblock %}
+
+{% block content %}
+
+<!-- Main Content -->
+<div class="row">
+    <div class="col-xs-12">
+
+        {% for message in messages %}
+            <h4{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</h4>
+        {% endfor %}
+
+        <div class="widget">
+            <div class="widget-body">
+                <a href="{% url 'customer:create_customer' %}"><button type="button" class="btn btn-primary"><i class=" fa fa-plus"></i> Create a New</button></a></a>
+                <hr/>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>Email Address</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Picture</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- more info about forloop : https://docs.djangoproject.com/en/1.9/ref/templates/builtins/#for -->
+
+                        {% for customer in customers %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.address }}</td>
+
+                            <td>
+                            <img src="{{ customer.picture.url }}"></td>
+                            <td>
+                                <a class="btn btn-info btn-xs" href="{% url 'customer:edit_customer' customer.uuid %}"><i class=" fa fa-edit"></i> Edit<a/>
+                                <a class="btn btn-danger btn-xs" href="{% url 'customer:delete_customer' customer.uuid %}"><i class=" fa fa-trash"></i> Delete<a/>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
