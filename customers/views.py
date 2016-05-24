@@ -93,14 +93,18 @@ def edit_customer(request, uuid=None):
 
         # wrap POST data with the form
         #form = ODCustomerForm(request.POST, instance=customer)
-        form = ODCustomerForm(request.POST, request.FILES ,instance=customer)
+        form = ODCustomerForm(request.POST, request.FILES)
         # Transaction savepoint (good to provide rollback data)
         sid = transaction.savepoint()
-
         if form.is_valid():
-
-            try:
-                form.save()
+            try:           
+                customer = ODCustomer.objects.get(uuid=uuid)
+                customer.name = form.cleaned_data.get('name')
+                customer.email = form.cleaned_data.get('email')
+                customer.phone = form.cleaned_data.get('phone')
+                customer.address = form.cleaned_data.get('address')
+                customer.picture = form.cleaned_data.get('picture')    
+                customer.save()
             except:
                 transaction.savepoint_rollback(sid)
                 messages.error(request, "Oops! Something wrong happened!")
